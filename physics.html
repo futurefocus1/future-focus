@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Learning Hub</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        .logo span {
+            color: #f7b733;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: #f7b733;
+        }
+
+        .home-link {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+
+        .home-link:hover {
+            color: #f7b733;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: url('https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            margin-top: 60px; /* To account for fixed header */
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #f7b733;
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #f0a91a;
+        }
+        
+        /* Chapters Section */
+        .chapters {
+            padding: 4rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.2rem;
+            color: #1a2a6c;
+        }
+        
+        .chapter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .chapter-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .chapter-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .chapter-img {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .chapter-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .chapter-card:hover .chapter-img img {
+            transform: scale(1.1);
+        }
+        
+        .chapter-content {
+            padding: 1.5rem;
+        }
+        
+        .chapter-content h3 {
+            margin-bottom: 1rem;
+            color: #1a2a6c;
+        }
+        
+        .chapter-content p {
+            margin-bottom: 1.5rem;
+            color: #666;
+        }
+        
+        /* Page Sections */
+        .page-section {
+            padding: 6rem 0 4rem; /* Extra top padding for fixed header */
+            min-height: 100vh;
+            display: none;
+        }
+        
+        .page-section.active {
+            display: block;
+        }
+        
+        .page-section h2 {
+            color: #1a2a6c;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+        
+        .page-section p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .page-section img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .formula {
+            background-color: #f8f9fa;
+            border-left: 4px solid #f7b733;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            margin-top: 2rem;
+            background: #b21f1f;
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: #9a1a1a;
+        }
+        
+        /* Quiz Section */
+        .quiz-section {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-top: 3rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .quiz-title {
+            font-size: 1.5rem;
+            color: #1a2a6c;
+        }
+        
+        .quiz-timer {
+            background: #f1f1f1;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .quiz-question {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        
+        .quiz-options {
+            margin-bottom: 2rem;
+        }
+        
+        .quiz-option {
+            display: block;
+            background: #f9f9f9;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .quiz-option:hover {
+            background: #f1f1f1;
+        }
+        
+        .quiz-option.selected {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+        
+        .quiz-option.correct {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+        
+        .quiz-option.incorrect {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+        
+        .quiz-btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .quiz-prev {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .quiz-next {
+            background: #007bff;
+            color: white;
+        }
+        
+        .quiz-submit {
+            background: #28a745;
+            color: white;
+            display: none;
+        }
+        
+        .quiz-result {
+            text-align: center;
+            padding: 2rem;
+            display: none;
+        }
+        
+        .quiz-result h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .quiz-score {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #28a745;
+            margin: 1rem 0;
+        }
+        
+        .quiz-feedback {
+            margin-bottom: 1.5rem;
+        }
+        
+        .quiz-restart {
+            background: #17a2b8;
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        /* Footer */
+        footer {
+            background: #1a2a6c;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0 0.5rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .chapter-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quiz-navigation {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .quiz-btn {
+                width: 100%;
+            }
+        }
+
+    /* Resource Grid Styles */
+    .resource-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 20px;
+        margin: 30px 0;
+    }
+
+    .resource-card {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .resource-icon {
+        font-size: 2.5rem;
+        margin-right: 15px;
+    }
+
+    .resource-card h3 {
+        margin-top: 0;
+        color: #1a2a6c;
+    }
+
+    .resource-card p {
+        margin: 10px 0;
+        color: #666;
+    }
+
+    /* Responsive design for smaller screens */
+    @media (max-width: 768px) {
+        .resource-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .resource-card {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .resource-icon {
+            margin-right: 0;
+            margin-bottom: 15px;
+        }
+    }
+
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <a href="index.html" class="home-link">← Back to FutureLearn</a>
+            <nav>
+                <ul>
+                    <li><a href="#" class="nav-link" data-target="home">Home</a></li>
+                    <li><a href="#" class="nav-link" data-target="physics-society">Physics & Society</a></li>
+                    <li><a href="#" class="nav-link" data-target="vectors">Vectors</a></li>
+                    <li><a href="#" class="nav-link" data-target="motion">Motion</a></li>
+                    <li><a href="#" class="nav-link" data-target="dynamics">Dynamics</a></li>
+                    <li><a href="#" class="nav-link" data-target="heat">Heat</a></li>
+                    <li><a href="#" class="nav-link" data-target="electrostatics">Electrostatics</a></li>
+                    <li><a href="#" class="nav-link" data-target="nuclear">Nuclear Physics</a></li>
+                    <li><a href="#" class="nav-link" data-target="resources">Resources</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Home Page -->
+    <section class="page-section active" id="home">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Discover the Laws of the Universe</h1>
+                <p>Master fundamental physics concepts from classical mechanics to modern physics with our comprehensive learning resources.</p>
+                <a href="#" class="btn nav-link" data-target="chapters">Start Learning</a>
+            </div>
+        </section>
+
+        <!-- Chapters Overview -->
+        <section class="chapters" id="chapters">
+            <div class="container">
+                <h2 class="section-title">Physics Chapters</h2>
+                <div class="chapter-grid">
+                    <!-- Chapter 1 -->
+                    <div class="chapter-card">
+                        <div class="chapter-img">
+                            <img src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Physics and society">
+                        </div>
+                        <div class="chapter-content">
+                            <h3>Physics and Human Society</h3>
+                            <p>Explore how physics principles shape technology and influence our daily lives and society.</p>
+                            <a href="#" class="btn nav-link" data-target="physics-society">Learn More</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Chapter 2 -->
+                    <div class="chapter-card">
+                        <div class="chapter-img">
+                            <img src="https://images.unsplash.com/photo-1727522974621-c64b5ea90c0b?q=80&w=1946&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Vectors">
+                        </div>
+                        <div class="chapter-content">
+                            <h3>Vectors</h3>
+                            <p>Understand vector quantities, their properties, and operations in physics applications.</p>
+                            <a href="#" class="btn nav-link" data-target="vectors">Learn More</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Chapter 3 -->
+                    <div class="chapter-card">
+                        <div class="chapter-img">
+                            <img src="https://images.unsplash.com/photo-1454789548928-9efd52dc4031?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Motion">
+                        </div>
+                        <div class="chapter-content">
+                            <h3>Motion in 1D and 2D</h3>
+                            <p>Study the fundamental concepts of motion, including kinematics equations and projectile motion.</p>
+                            <a href="#" class="btn nav-link" data-target="motion">Learn More</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Chapter 4 -->
+                    <div class="chapter-card">
+                        <div class="chapter-img">
+                            <img src="https://images.unsplash.com/photo-1633493702341-4d04841df53b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bmV3dG9ucyUyMGNyYWRsZXxlbnwwfHwwfHx8MA%3D%3D" alt="Dynamics">
+                        </div>
+                        <div class="chapter-content">
+                            <h3>Dynamics</h3>
+                            <p>Learn about forces, Newton's laws of motion, and their applications to real-world problems.</p>
+                            <a href="#" class="btn nav-link" data-target="dynamics">Learn More</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Chapter 5 -->
+                    <div class="chapter-card">
+                        <div class="chapter-img">
+                            <img src="https://images.unsplash.com/photo-1595166986545-bf6dacb22b4e?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Heat">
+                        </div>
+                        <div class="chapter-content">
+                            <h3>Heat Conduction</h3>
+                            <p>Explore heat transfer mechanisms and the measurement of heat changes in substances.</p>
+                            <a href="#" class="btn nav-link" data-target="heat">Learn More</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Chapter 6 -->
+                    <div class="chapter-card">
+                        <div class="chapter-img">
+                            <img src="https://images.unsplash.com/photo-1728808668131-76d40d112271?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8ZWxlY3Ryb3N0YXRpY3N8ZW58MHx8MHx8fDA%3D" alt="Electrostatics">
+                        </div>
+                        <div class="chapter-content">
+                            <h3>Electrostatics</h3>
+                            <p>Understand electric charges, fields, potential, and the flow of electric current.</p>
+                            <a href="#" class="btn nav-link" data-target="electrostatics">Learn More</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Chapter 7 -->
+                    <div class="chapter-card">
+                        <div class="chapter-img">
+                            <img src="https://media.istockphoto.com/id/1270632735/photo/model-of-atom-and-elementary-particles-physics-concept-3d-rendered-illustration.jpg?s=1024x1024&w=is&k=20&c=ucLH9sg9drk4RrhUPovtbdf4QNQd1QJlvu08RZ7u09c=" alt="Nuclear physics">
+                        </div>
+                        <div class="chapter-content">
+                            <h3>Nuclear Physics</h3>
+                            <p>Discover the structure of atomic nuclei, radioactivity, and nuclear reactions.</p>
+                            <a href="#" class="btn nav-link" data-target="nuclear">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <!-- Physics and Human Society Page -->
+    <section class="page-section" id="physics-society">
+        <div class="container">
+            <h2>Physics and Human Society</h2>
+            <img src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Physics in technology">
+            <p>Physics forms the foundation for nearly all modern technology and has profoundly shaped human civilization. From the wheel to quantum computers, physics principles drive innovation.</p>
+            
+            <h3>Key Areas of Impact:</h3>
+            <ul>
+                <li>Medical technology (MRI, X-rays, laser surgery)</li>
+                <li>Transportation (aerodynamics, combustion engines, maglev trains)</li>
+                <li>Communication (fiber optics, satellites, wireless technology)</li>
+                <li>Energy production (solar cells, nuclear power, wind turbines)</li>
+            </ul>
+            
+            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Space technology">
+            <p>Physics also plays a crucial role in addressing global challenges like climate change, energy sustainability, and space exploration. The scientific method developed through physics research has become the gold standard for problem-solving across disciplines.</p>
+            
+            <!-- Quiz Section -->
+            <div class="quiz-section" id="society-quiz">
+                <div class="quiz-header">
+                    <h3 class="quiz-title">Physics & Society Quiz</h3>
+                    <div class="quiz-timer">Time: <span id="society-time">05:00</span></div>
+                </div>
+                
+                <div class="quiz-question-container">
+                    <div class="quiz-question">1. Which physics discovery led to the development of MRI technology?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option">Newton's laws of motion</div>
+                        <div class="quiz-option" data-correct="true">Nuclear magnetic resonance</div>
+                        <div class="quiz-option">Quantum tunneling</div>
+                        <div class="quiz-option">Thermodynamics</div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question-container" style="display:none">
+                    <div class="quiz-question">2. What physics principle is primarily responsible for keeping satellites in orbit?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option">Electromagnetism</div>
+                        <div class="quiz-option">Thermodynamics</div>
+                        <div class="quiz-option" data-correct="true">Centripetal force and gravity</div>
+                        <div class="quiz-option">Quantum mechanics</div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question-container" style="display:none">
+                    <div class="quiz-question">3. Which physics field is most relevant to developing solar energy technology?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option">Fluid dynamics</div>
+                        <div class="quiz-option" data-correct="true">Photoelectric effect</div>
+                        <div class="quiz-option">Nuclear physics</div>
+                        <div class="quiz-option">Acoustics</div>
+                    </div>
+                </div>
+                
+                <div class="quiz-navigation">
+                    <button class="quiz-btn quiz-prev" disabled>Previous</button>
+                    <button class="quiz-btn quiz-next">Next</button>
+                    <button class="quiz-btn quiz-submit">Submit Quiz</button>
+                </div>
+                
+                <div class="quiz-result">
+                    <h3>Quiz Completed!</h3>
+                    <div class="quiz-score">0/3</div>
+                    <p class="quiz-feedback">Keep learning to improve your score!</p>
+                    <button class="quiz-restart">Restart Quiz</button>
+                </div>
+            </div>
+            
+            <a href="#" class="back-btn nav-link" data-target="home">Back to Home</a>
+        </div>
+    </section>
+    
+    <!-- Vectors Page -->
+    <section class="page-section" id="vectors">
+        <div class="container">
+            <h2>Vectors</h2>
+            <img src="https://images.unsplash.com/photo-1727522974621-c64b5ea90c0b?q=80&w=1946&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Vector representation">
+            <p>Vectors are mathematical quantities that have both magnitude and direction. They are essential in physics for representing quantities like displacement, velocity, force, and acceleration.</p>
+            
+            <h3>Key Concepts:</h3>
+            <ul>
+                <li>Vector components and representation</li>
+                <li>Vector addition and subtraction (graphical and analytical methods)</li>
+                <li>Dot product and cross product</li>
+                <li>Unit vectors and coordinate systems</li>
+            </ul>
+            
+            <div class="formula">
+                Vector addition: <strong>R = A + B</strong> where R<sub>x</sub> = A<sub>x</sub> + B<sub>x</sub> and R<sub>y</sub> = A<sub>y</sub> + B<sub>y</sub>
+            </div>
+            
+            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3b/Vector_Addition.svg" alt="Vector addition" style="background: white; padding: 1rem;">
+            <p>Vectors can be resolved into components using trigonometry. In two dimensions, a vector V with magnitude |V| and angle θ to the x-axis has components V<sub>x</sub> = |V|cosθ and V<sub>y</sub> = |V|sinθ.</p>
+            
+            <!-- Quiz Section -->
+            <div class="quiz-section" id="vectors-quiz">
+                <div class="quiz-header">
+                    <h3 class="quiz-title">Vectors Quiz</h3>
+                    <div class="quiz-timer">Time: <span id="vectors-time">05:00</span></div>
+                </div>
+                
+                <div class="quiz-question-container">
+                    <div class="quiz-question">1. Which of these quantities is NOT a vector?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option">Force</div>
+                        <div class="quiz-option">Displacement</div>
+                        <div class="quiz-option" data-correct="true">Energy</div>
+                        <div class="quiz-option">Acceleration</div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question-container" style="display:none">
+                    <div class="quiz-question">2. If a vector has components A<sub>x</sub> = 3 and A<sub>y</sub> = 4, what is its magnitude?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option">5.5</div>
+                        <div class="quiz-option">7</div>
+                        <div class="quiz-option" data-correct="true">5</div>
+                        <div class="quiz-option">12</div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question-container" style="display:none">
+                    <div class="quiz-question">3. What is the result of the dot product of two perpendicular vectors?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option">1</div>
+                        <div class="quiz-option">The product of their magnitudes</div>
+                        <div class="quiz-option" data-correct="true">0</div>
+                        <div class="quiz-option">Undefined</div>
+                    </div>
+                </div>
+                
+                <div class="quiz-navigation">
+                    <button class="quiz-btn quiz-prev" disabled>Previous</button>
+                    <button class="quiz-btn quiz-next">Next</button>
+                    <button class="quiz-btn quiz-submit">Submit Quiz</button>
+                </div>
+                
+                <div class="quiz-result">
+                    <h3>Quiz Completed!</h3>
+                    <div class="quiz-score">0/3</div>
+                    <p class="quiz-feedback">Keep learning to improve your score!</p>
+                    <button class="quiz-restart">Restart Quiz</button>
+                </div>
+            </div>
+            
+            <a href="#" class="back-btn nav-link" data-target="home">Back to Home</a>
+        </div>
+    </section>
+    
+    <!-- Motion in 1D and 2D Page -->
+    <section class="page-section" id="motion">
+        <div class="container">
+            <h2>Motion in One and Two Dimensions</h2>
+            <img src="https://media.istockphoto.com/id/2167178296/photo/glowing-atomic-structure-on-dark-background-representing-quantum-physics-and-energy.jpg?s=1024x1024&w=is&k=20&c=HIneXwR9hnk_SpPQTOGqhNQDCQvJZjZBr3LHKnWUfMk=" alt="Projectile motion">
+            <p>The study of motion (kinematics) involves describing an object's position, velocity, and acceleration over time. In one dimension, motion is along a straight line, while two-dimensional motion includes projectile motion and circular motion.</p>
+            
+            <h3>Key Equations:</h3>
+            <div class="formula">
+                v = v<sub>0</sub> + at<br>
+                x = x<sub>0</sub> + v<sub>0</sub>t + ½at<sup>2</sup><br>
+                v<sup>2</sup> = v<sub>0</sub><sup>2</sup> + 2a(x - x<sub>0</sub>)
+            </div>
+            
+            <p>Projectile motion combines horizontal motion (constant velocity) with vertical motion (constant acceleration due to gravity). The horizontal and vertical motions are independent of each other.</p>
+            
+            <!-- Quiz Section -->
+            <div class="quiz-section" id="motion-quiz">
+                <div class="quiz-header">
+                    <h3 class="quiz-title">Motion Quiz</h3>
+                    <div class="quiz-timer">Time: <span id="motion-time">05:00</span></div>
+                </div>
+                
+                <div class="quiz-question-container">
+                    <div class="quiz-question">1. What is the acceleration of a projectile at the peak of its trajectory?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option">0 m/s<sup>2</sup></div>
+                        <div class="quiz-option">9.8 m/s<sup>2</sup> upward</div>
+                        <div class="quiz-option" data-correct="true">9.8 m/s<sup>2</sup> downward</div>
+                        <div class="quiz-option">19.6 m/s<sup>2</sup> downward</div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question-container" style="display:none">
+                    <div class="quiz-question">2. If a car accelerates uniformly from rest to 20 m/s in 5 seconds, how far does it travel?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option">100 m</div>
+                        <div class="quiz-option">20 m</div>
+                        <div class="quiz-option" data-correct="true">50 m</div>
+                        <div class="quiz-option">4 m</div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question-container" style="display:none">
+                    <div class="quiz-question">3. Which quantity remains constant in uniform circular motion?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option">Velocity</div>
+                        <div class="quiz-option">Acceleration</div>
+                        <div class="quiz-option" data-correct="true">Speed</div>
+                        <div class="quiz-option">All of the above</div>
+                    </div>
+                </div>
+                
+                <div class="quiz-navigation">
+                    <button class="quiz-btn quiz-prev" disabled>Previous</button>
+                    <button class="quiz-btn quiz-next">Next</button>
+                    <button class="quiz-btn quiz-submit">Submit Quiz</button>
+                </div>
+                
+                <div class="quiz-result">
+                    <h3>Quiz Completed!</h3>
+                    <div class="quiz-score">0/3</div>
+                    <p class="quiz-feedback">Keep learning to improve your score!</p>
+                    <button class="quiz-restart">Restart Quiz</button>
+                </div>
+            </div>
+            
+            <a href="#" class="back-btn nav-link" data-target="home">Back to Home</a>
+        </div>
+    </section>
+    
+    <!-- Dynamics Page -->
+    <section class="page-section" id="dynamics">
+        <div class="container">
+            <h2>Dynamics</h2>
+            <img src="https://images.unsplash.com/photo-1633493702341-4d04841df53b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bmV3dG9ucyUyMGNyYWRsZXxlbnwwfHwwfHx8MA%3D%3D" alt="Newton's laws">
+            <p>Dynamics is the study of the causes of motion, primarily through Newton's laws. It relates forces acting on objects to their resulting motion.</p>
+            
+            <h3>Newton's Laws of Motion:</h3>
+            <ol>
+                <li><strong>First Law (Inertia):</strong> An object remains at rest or in uniform motion unless acted upon by a net force.</li>
+                <li><strong>Second Law:</strong> F = ma (Force equals mass times acceleration)</li>
+                <li><strong>Third Law:</strong> For every action, there is an equal and opposite reaction</li>
+            </ol>
+            
+            <p>Free-body diagrams are essential tools in dynamics, showing all forces acting on an object. Common forces include gravity (weight), normal force, tension, friction, and applied forces.</p>
+            
+            <!-- Quiz Section -->
+            <div class="quiz-section" id="dynamics-quiz">
+                <div class="quiz-header">
+                    <h3 class="quiz-title">Dynamics Quiz</h3>
+                    <div class="quiz-timer">Time: <span id="dynamics-time">05:00</span></div>
+                </div>
+                
+                <div class="quiz-question-container">
+                    <div class="quiz-question">1. What is the net force required to accelerate a 5 kg mass at 2 m/s<sup>2</sup>?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option">2.5 N</div>
+                        <div class="quiz-option">0.4 N</div>
+                        <div class="quiz-option" data-correct="true">10 N</div>
+                        <div class="quiz-option">7 N</div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question-container" style="display:none">
+                    <div class="quiz-question">2. According to Newton's third law, if you push on a wall, what happens?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option">The wall doesn't push back</div>
+                        <div class="quiz-option" data-correct="true">The wall pushes back with equal force</div>
+                        <div class="quiz-option">The wall pushes back with less force</div>
+                        <div class="quiz-option">The wall pushes back only if it moves</div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question-container" style="display:none">
+                    <div class="quiz-question">3. What type of force opposes the relative motion of two surfaces in contact?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option">Normal force</div>
+                        <div class="quiz-option">Tension</div>
+                        <div class="quiz-option" data-correct="true">Friction</div>
+                        <div class="quiz-option">Gravity</div>
+                    </div>
+                </div>
+                
+                <div class="quiz-navigation">
+                    <button class="quiz-btn quiz-prev" disabled>Previous</button>
+                    <button class="quiz-btn quiz-next">Next</button>
+                    <button class="quiz-btn quiz-submit">Submit Quiz</button>
+                </div>
+                
+                <div class="quiz-result">
+                    <h3>Quiz Completed!</h3>
+                    <div class="quiz-score">0/3</div>
+                    <p class="quiz-feedback">Keep learning to improve your score!</p>
+                    <button class="quiz-restart">Restart Quiz</button>
+                </div>
+            </div>
+            
+            <a href="#" class="back-btn nav-link" data-target="home">Back to Home</a>
+        </div>
+    </section>
+    
+    <!-- Heat Conduction Page -->
+    <section class="page-section" id="heat">
+        <div class="container">
+            <h2>Heat Conduction and Calorimetry</h2>
+            <img src="https://images.unsplash.com/photo-1595166986545-bf6dacb22b4e?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Heat transfer">
+            <p>Heat is the transfer of thermal energy between systems due to temperature differences. The three modes of heat transfer are conduction, convection, and radiation.</p>
+            
+            <h3>Key Concepts:</h3>
+            <ul>
+                <li>Thermal conductivity and conduction rate</li>
+                <li>Specific heat capacity and heat transfer calculations</li>
+                <li>Calorimetry: measuring heat changes</li>
+                <li>Phase changes and latent heat</li>
+            </ul>
+            
+            <div class="formula">
+                Heat conduction: Q/t = kAΔT/d<br>
+                Heat transfer: Q = mcΔT<br>
+                Heat during phase change: Q = mL
+            </div>
+            
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Heat_Transfer.png/800px-Heat_Transfer.png" alt="Heat transfer methods" style="background: white; padding: 1rem;">
+            <p>Calorimeters are devices used to measure heat changes in chemical reactions or physical changes. The first law of thermodynamics (conservation of energy) applies to all heat transfer processes.</p>
+            
+            <!-- Quiz Section -->
+            <div class="quiz-section" id="heat-quiz">
+                <div class="quiz-header">
+                    <h3 class="quiz-title">Heat Quiz</h3>
+                    <div class="quiz-timer">Time: <span id="heat-time">05:00</span></div>
+                </div>
+                
+                <div class="quiz-question-container">
+                    <div class="quiz-question">1. Which mode of heat transfer does NOT require a medium?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option">Conduction</div>
+                        <div class="quiz-option">Convection</div>
+                        <div class="quiz-option" data-correct="true">Radiation</div>
+                        <div class="quiz-option">All require a medium</div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question-container" style="display:none">
+                    <div class="quiz-question">2. How much heat is needed to raise 1 kg of water (c=4186 J/kg°C) by 10°C?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option">418.6 J</div>
+                        <div class="quiz-option">41,860 J</div>
+                        <div class="quiz-option" data-correct="true">41,860 J</div>
+                        <div class="quiz-option">4,186 J</div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question-container" style="display:none">
+                    <div class="quiz-question">3. What happens to the temperature during a phase change?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option">It increases linearly</div>
+                        <div class="quiz-option">It decreases exponentially</div>
+                        <div class="quiz-option" data-correct="true">It remains constant</div>
+                        <div class="quiz-option">It fluctuates randomly</div>
+                    </div>
+                </div>
+                
+                <div class="quiz-navigation">
+                    <button class="quiz-btn quiz-prev" disabled>Previous</button>
+                    <button class="quiz-btn quiz-next">Next</button>
+                    <button class="quiz-btn quiz-submit">Submit Quiz</button>
+                </div>
+                
+                <div class="quiz-result">
+                    <h3>Quiz Completed!</h3>
+                    <div class="quiz-score">0/3</div>
+                    <p class="quiz-feedback">Keep learning to improve your score!</p>
+                    <button class="quiz-restart">Restart Quiz</button>
+                </div>
+            </div>
+            
+            <a href="#" class="back-btn nav-link" data-target="home">Back to Home</a>
+        </div>
+    </section>
+    
+    <!-- Electrostatics Page -->
+    <section class="page-section" id="electrostatics">
+        <div class="container">
+            <h2>Electrostatics and Electric Current</h2>
+            <img src="https://images.unsplash.com/photo-1728808668131-76d40d112271?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8ZWxlY3Ryb3N0YXRpY3N8ZW58MHx8MHx8fDA%3D" alt="Electricity">
+            <p>Electrostatics deals with stationary electric charges and their fields, while electric current involves the flow of charges through conductors.</p>
+            
+            <h3>Key Concepts:</h3>
+            <ul>
+                <li>Coulomb's law: force between charges</li>
+                <li>Electric fields and potential</li>
+                <li>Current, voltage, and resistance (Ohm's law)</li>
+                <li>Series and parallel circuits</li>
+            </ul>
+            
+            <div class="formula">
+                Coulomb's Law: F = k|q<sub>1</sub>q<sub>2</sub>|/r<sup>2</sup><br>
+                Ohm's Law: V = IR<br>
+                Electric power: P = IV = I<sup>2</sup>R
+            </div>
+            
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Ohms_law.svg/800px-Ohms_law.svg.png" alt="Ohm's law" style="background: white; padding: 1rem;">
+            <p>Materials are classified as conductors, insulators, or semiconductors based on their ability to conduct electric current. Resistance depends on the material's resistivity, length, and cross-sectional area (R = ρL/A).</p>
+            
+            <!-- Quiz Section -->
+            <div class="quiz-section" id="electrostatics-quiz">
+                <div class="quiz-header">
+                    <h3 class="quiz-title">Electrostatics Quiz</h3>
+                    <div class="quiz-timer">Time: <span id="electrostatics-time">05:00</span></div>
+                </div>
+                
+                <div class="quiz-question-container">
+                    <div class="quiz-question">1. What happens to the force between two charges if the distance between them triples?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option">It triples</div>
+                        <div class="quiz-option">It becomes 9 times stronger</div>
+                        <div class="quiz-option" data-correct="true">It becomes 1/9 as strong</div>
+                        <div class="quiz-option">It doesn't change</div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question-container" style="display:none">
+                    <div class="quiz-question">2. If the voltage across a resistor is 12V and the current is 3A, what is the resistance?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option">36 Ω</div>
+                        <div class="quiz-option">0.25 Ω</div>
+                        <div class="quiz-option" data-correct="true">4 Ω</div>
+                        <div class="quiz-option">15 Ω</div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question-container" style="display:none">
+                    <div class="quiz-question">3. In a parallel circuit, what remains the same across all components?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option">Current</div>
+                        <div class="quiz-option" data-correct="true">Voltage</div>
+                        <div class="quiz-option">Resistance</div>
+                        <div class="quiz-option">Power</div>
+                    </div>
+                </div>
+                
+                <div class="quiz-navigation">
+                    <button class="quiz-btn quiz-prev" disabled>Previous</button>
+                    <button class="quiz-btn quiz-next">Next</button>
+                    <button class="quiz-btn quiz-submit">Submit Quiz</button>
+                </div>
+                
+                <div class="quiz-result">
+                    <h3>Quiz Completed!</h3>
+                    <div class="quiz-score">0/3</div>
+                    <p class="quiz-feedback">Keep learning to improve your score!</p>
+                    <button class="quiz-restart">Restart Quiz</button>
+                </div>
+            </div>
+            
+            <a href="#" class="back-btn nav-link" data-target="home">Back to Home</a>
+        </div>
+    </section>
+    
+    <!-- Nuclear Physics Page -->
+    <section class="page-section" id="nuclear">
+        <div class="container">
+            <h2>Nuclear Physics</h2>
+            <img src="https://media.istockphoto.com/id/1270632735/photo/model-of-atom-and-elementary-particles-physics-concept-3d-rendered-illustration.jpg?s=1024x1024&w=is&k=20&c=ucLH9sg9drk4RrhUPovtbdf4QNQd1QJlvu08RZ7u09c=" alt="Nuclear physics">
+            <p>Nuclear physics studies the constituents and interactions of atomic nuclei. Key areas include radioactivity, nuclear reactions, and the applications of nuclear technology.</p>
+            
+            <h3>Key Concepts:</h3>
+            <ul>
+                <li>Nuclear structure: protons and neutrons</li>
+                <li>Radioactive decay (alpha, beta, gamma)</li>
+                <li>Nuclear reactions: fission and fusion</li>
+                <li>Half-life and decay calculations</li>
+            </ul>
+            
+            <div class="formula">
+                Mass-energy equivalence: E = mc<sup>2</sup><br>
+                Half-life: N = N<sub>0</sub>(½)<sup>t/t<sub>½</sub></sup><br>
+                Nuclear binding energy
+            </div>
+            
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Nuclear_Reactions.svg/800px-Nuclear_Reactions.svg.png" alt="Nuclear reactions" style="background: white; padding: 1rem;">
+            <p>Nuclear physics has applications in energy production (nuclear power plants), medicine (radiation therapy, PET scans), and dating archaeological finds (carbon-14 dating).</p>
+            
+            <!-- Quiz Section -->
+            <div class="quiz-section" id="nuclear-quiz">
+                <div class="quiz-header">
+                    <h3 class="quiz-title">Nuclear Physics Quiz</h3>
+                    <div class="quiz-timer">Time: <span id="nuclear-time">05:00</span></div>
+                </div>
+                
+                <div class="quiz-question-container">
+                    <div class="quiz-question">1. Which type of radiation has the greatest penetrating power?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option">Alpha particles</div>
+                        <div class="quiz-option">Beta particles</div>
+                        <div class="quiz-option" data-correct="true">Gamma rays</div>
+                        <div class="quiz-option">All have equal penetration</div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question-container" style="display:none">
+                    <div class="quiz-question">2. What is the half-life of a substance if 1/8 remains after 90 days?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option">11.25 days</div>
+                        <div class="quiz-option" data-correct="true">30 days</div>
+                        <div class="quiz-option">45 days</div>
+                        <div class="quiz-option">90 days</div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question-container" style="display:none">
+                    <div class="quiz-question">3. Which process powers the sun?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option">Nuclear fission</div>
+                        <div class="quiz-option">Chemical combustion</div>
+                        <div class="quiz-option" data-correct="true">Nuclear fusion</div>
+                        <div class="quiz-option">Radioactive decay</div>
+                    </div>
+                </div>
+                
+                <div class="quiz-navigation">
+                    <button class="quiz-btn quiz-prev" disabled>Previous</button>
+                    <button class="quiz-btn quiz-next">Next</button>
+                    <button class="quiz-btn quiz-submit">Submit Quiz</button>
+                </div>
+                
+                <div class="quiz-result">
+                    <h3>Quiz Completed!</h3>
+                    <div class="quiz-score">0/3</div>
+                    <p class="quiz-feedback">Keep learning to improve your score!</p>
+                    <button class="quiz-restart">Restart Quiz</button>
+                </div>
+            </div>
+            
+            <a href="#" class="back-btn nav-link" data-target="home">Back to Home</a>
+        </div>
+    </section>
+
+    <!-- Resources Section -->
+<section class="page-section" id="resources">
+    <div class="container">
+        <h2>Physics Learning Resources</h2>
+        
+        <div class="resource-grid">
+            <div class="resource-card">
+                <div class="resource-icon">📚</div>
+                <div>
+                    <h3>Textbook PDF</h3>
+                    <p>Read through the complete Grade 11 Physics textbook approved by the Ethiopian Ministry of Education.</p>
+                    <a href="https://drive.google.com/file/d/18CHtID2T9DcL3gBtDja4ZjwrYZtU9t8s/view?usp=sharing" target="_blank" class="btn">Open Textbook</a>
+                </div>
+            </div>
+            
+            <div class="resource-card">
+                <div class="resource-icon">🎬</div>
+                <div>
+                    <h3>Video Lessons</h3>
+                    <p>Watch physics concept explanations from Khan Academy's Physics channel! Choose from one of their many playlists.</p>
+                    <a href="https://www.youtube.com/@khanacademyphysics7609" target="_blank" class="btn">Watch Videos</a>
+                </div>
+            </div>
+        </div>
+        
+        <a href="#" class="back-btn nav-link" data-target="home">Back to Home</a>
+    </div>
+</section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>2023 PhysicsHub</p>
+            <p>Educational resource for physics students</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show home page by default
+            document.getElementById('home').classList.add('active');
+            
+            // Navigation functionality
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('data-target');
+                    
+                    // Hide all pages
+                    document.querySelectorAll('.page-section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    // Show target page
+                    document.getElementById(targetId).classList.add('active');
+                    
+                    // Scroll to top
+                    window.scrollTo({top: 0, behavior: 'smooth'});
+                });
+            });
+            
+            // Quiz functionality
+            const quizzes = document.querySelectorAll('.quiz-section');
+            
+            quizzes.forEach(quiz => {
+                const questionContainers = quiz.querySelectorAll('.quiz-question-container');
+                const prevBtn = quiz.querySelector('.quiz-prev');
+                const nextBtn = quiz.querySelector('.quiz-next');
+                const submitBtn = quiz.querySelector('.quiz-submit');
+                const restartBtn = quiz.querySelector('.quiz-restart');
+                const resultSection = quiz.querySelector('.quiz-result');
+                const scoreDisplay = quiz.querySelector('.quiz-score');
+                const options = quiz.querySelectorAll('.quiz-option');
+                const timerDisplay = quiz.querySelector('.quiz-timer span');
+                
+                let currentQuestion = 0;
+                let score = 0;
+                let timeLeft = 300; // 5 minutes in seconds
+                let timer;
+                
+                // Initialize quiz
+                function initQuiz() {
+                    currentQuestion = 0;
+                    score = 0;
+                    timeLeft = 300;
+                    updateTimerDisplay();
+                    
+                    // Hide all questions except first
+                    questionContainers.forEach((container, index) => {
+                        container.style.display = index === 0 ? 'block' : 'none';
+                    });
+                    
+                    // Reset UI
+                    prevBtn.disabled = true;
+                    nextBtn.style.display = 'block';
+                    submitBtn.style.display = 'none';
+                    resultSection.style.display = 'none';
+                    
+                    // Clear selections
+                    options.forEach(option => {
+                        option.classList.remove('selected', 'correct', 'incorrect');
+                    });
+                    
+                    // Start timer
+                    clearInterval(timer);
+                    timer = setInterval(updateTimer, 1000);
+                }
+                
+                // Update timer display
+                function updateTimerDisplay() {
+                    const minutes = Math.floor(timeLeft / 60);
+                    const seconds = timeLeft % 60;
+                    timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+                
+                // Timer countdown
+                function updateTimer() {
+                    timeLeft--;
+                    updateTimerDisplay();
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        submitQuiz();
+                    }
+                }
+                
+                // Show current question
+                function showQuestion(index) {
+                    questionContainers.forEach((container, i) => {
+                        container.style.display = i === index ? 'block' : 'none';
+                    });
+                    
+                    // Update button states
+                    prevBtn.disabled = index === 0;
+                    nextBtn.style.display = index === questionContainers.length - 1 ? 'none' : 'block';
+                    submitBtn.style.display = index === questionContainers.length - 1 ? 'block' : 'none';
+                }
+                
+                // Submit quiz
+                function submitQuiz() {
+                    clearInterval(timer);
+                    
+                    // Calculate score
+                    const selectedOptions = quiz.querySelectorAll('.quiz-option.selected');
+                    selectedOptions.forEach(option => {
+                        if (option.hasAttribute('data-correct')) {
+                            score++;
+                        }
+                    });
+                    
+                    // Show result
+                    scoreDisplay.textContent = `${score}/${questionContainers.length}`;
+                    const percentage = (score / questionContainers.length) * 100;
+                    
+                    let feedback;
+                    if (percentage >= 80) {
+                        feedback = "Excellent work! You've mastered this topic.";
+                    } else if (percentage >= 60) {
+                        feedback = "Good job! You have a solid understanding.";
+                    } else if (percentage >= 40) {
+                        feedback = "Not bad! Review the material to improve.";
+                    } else {
+                        feedback = "Keep studying! You'll get better with practice.";
+                    }
+                    
+                    quiz.querySelector('.quiz-feedback').textContent = feedback;
+                    resultSection.style.display = 'block';
+                }
+                
+                // Event listeners
+                prevBtn.addEventListener('click', () => {
+                    if (currentQuestion > 0) {
+                        currentQuestion--;
+                        showQuestion(currentQuestion);
+                    }
+                });
+                
+                nextBtn.addEventListener('click', () => {
+                    if (currentQuestion < questionContainers.length - 1) {
+                        currentQuestion++;
+                        showQuestion(currentQuestion);
+                    }
+                });
+                
+                submitBtn.addEventListener('click', submitQuiz);
+                
+                restartBtn.addEventListener('click', initQuiz);
+                
+                // Option selection
+                quiz.querySelectorAll('.quiz-option').forEach(option => {
+                    option.addEventListener('click', function() {
+                        // Remove selection from other options in this question
+                        const questionOptions = this.parentNode.querySelectorAll('.quiz-option');
+                        questionOptions.forEach(opt => {
+                            opt.classList.remove('selected');
+                        });
+                        
+                        // Select this option
+                        this.classList.add('selected');
+                        
+                        // Show if correct/incorrect (for immediate feedback)
+                        if (this.hasAttribute('data-correct')) {
+                            this.classList.add('correct');
+                        } else {
+                            this.classList.add('incorrect');
+                            // Highlight correct answer
+                            const correctOption = this.parentNode.querySelector('[data-correct="true"]');
+                            if (correctOption) {
+                                correctOption.classList.add('correct');
+                            }
+                        }
+                    });
+                });
+                
+                // Initialize quiz
+                initQuiz();
+            });
+        });
+    </script>
+</body>
+</html>

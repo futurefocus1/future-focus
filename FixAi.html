@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AI Assistant - FutureFocus</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+/* General Body and Typography */
+:root {
+--primary-color: #4CAF50; /* Green */
+--primary-dark: #388E3C;
+--secondary-color: #2196F3; /* Blue */
+--accent-color: #FFC107; /* Amber */
+--text-color: #333;
+--light-text-color: #777;
+--background-color: #f4f7f6;
+--card-background: #fff;
+--border-color: #ddd;
+--shadow-color: rgba(0, 0, 0, 0.1);
+--hover-background: #e0e0e0; /* Slightly darker hover for general elements */
+--danger-color: #f44336;
+--info-color: #2196F3;
+--success-color: #4CAF50;
+--warning-color: #FF9800;
+
+/* New for interactivity */
+--transition-speed: 0.2s ease;
+--button-shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+}
+
+body {
+font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+line-height: 1.6;
+color: var(--text-color);
+background-color: var(--background-color);
+display: flex;
+flex-direction: column;
+min-height: 100vh;
+}
+
+/* Material Icons Integration */
+.material-icons {
+vertical-align: middle;
+margin-right: 5px;
+font-size: 1.2em; /* Adjust as needed */
+}
+
+/* Header Styles */
+#mainHeader {
+background-color: var(--card-background);
+color: var(--text-color);
+padding: 15px 20px;
+border-bottom: 1px solid var(--border-color);
+box-shadow: 0 2px 4px var(--shadow-color);
+z-index: 1000;
+}
+
+.header-container {
+display: flex;
+justify-content: space-between;
+align-items: center;
+max-width: 1200px;
+margin: 0 auto;
+}
+
+.logo {
+display: flex;
+align-items: center;
+text-decoration: none;
+color: var(--primary-color);
+font-size: 1.8em;
+font-weight: bold;
+transition: color var(--transition-speed);
+}
+
+.logo:hover {
+color: var(--primary-dark);
+}
+
+.logo-icon {
+font-size: 1.5em;
+margin-right: 8px;
+color: var(--secondary-color);
+}
+
+.logo span:last-child {
+color: var(--secondary-color);
+}
+
+/* Auth Buttons */
+.auth-buttons {
+display: flex;
+gap: 10px;
+}
+
+/* User Auth Container - Simplified for direct display in header */
+.user-auth-container {
+position: static; /* Remove absolute positioning from previous version */
+display: flex;
+align-items: center;
+cursor: default; /* No longer a clickable dropdown toggle */
+padding: 0; /* Remove padding */
+}
+
+.user-info { /* This is the div that contains avatar and username */
+display: flex;
+align-items: center;
+gap: 10px;
+padding: 5px 10px; /* Keep padding for visual balance with buttons */
+border-radius: 25px;
+background-color: transparent; /* No background hover for this now */
+cursor: default; /* No hover cursor */
+}
+
+.user-info:hover {
+background-color: transparent; /* Disable hover background */
+}
+
+.user-avatar {
+width: 36px;
+height: 36px;
+border-radius: 50%;
+background-color: var(--secondary-color);
+color: white;
+display: flex;
+justify-content: center;
+align-items: center;
+font-weight: bold;
+font-size: 1.1em;
+box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.username {
+font-weight: bold;
+color: var(--text-color);
+}
+
+/* Dropdown specific styles - REDESIGNED for Logout button placement */
+.dropdown {
+/* Make the dropdown invisible but the logout button inside it visible elsewhere */
+position: absolute; /* Needed for positioning its child (logout button) */
+top: 0; /* Align to the top of the main container */
+left: 0; /* Align to the left of the main container */
+width: 100%; /* Take full width for positioning reference */
+height: 100%; /* Take full height for positioning reference */
+background-color: transparent; /* Make dropdown itself invisible */
+border: none; /* Remove border */
+box-shadow: none; /* Remove shadow */
+min-width: unset;
+z-index: 100; /* Ensure it's above other chat elements but below modals */
+opacity: 1; /* Always visible to make logout button work */
+visibility: visible; /* Always visible */
+transform: none; /* No transform needed */
+pointer-events: none; /* Allow clicks to pass through to elements below */
+}
+
+/* Make the actual logout button visible and position it */
+#logoutBtn {
+pointer-events: auto; /* Re-enable clicks for the button */
+position: absolute;
+bottom: 20px; /* Distance from bottom of main container */
+left: 40px; /* Distance from left of main container */
+width: 200px; /* Fixed width for the button */
+padding: 10px 18px; /* Consistent padding */
+border: 2px solid var(--primary-color); /* Apply outline style */
+color: var(--primary-color);
+background-color: var(--card-background); /* White background */
+z-index: 101; /* Above sidebar content */
+}
+
+#logoutBtn:hover {
+background-color: var(--primary-color);
+color: white;
+box-shadow: var(--button-shadow-hover);
+}
+
+/* Buttons General */
+.btn {
+padding: 10px 18px;
+border: none;
+border-radius: 25px;
+cursor: pointer;
+font-size: 0.9em;
+font-weight: 600;
+transition: all var(--transition-speed);
+display: inline-flex;
+align-items: center;
+justify-content: center;
+text-decoration: none;
+user-select: none;
+}
+
+.btn:active {
+transform: translateY(1px);
+}
+
+.btn-primary {
+background-color: var(--primary-color);
+color: white;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary:hover {
+background-color: var(--primary-dark);
+transform: translateY(-1px);
+box-shadow: var(--button-shadow-hover);
+}
+
+.btn-outline {
+background-color: transparent;
+color: var(--primary-color);
+border: 2px solid var(--primary-color);
+}
+
+.btn-outline:hover {
+background-color: var(--primary-color);
+color: white;
+box-shadow: var(--button-shadow-hover);
+}
+
+.btn-danger {
+background-color: var(--danger-color);
+color: white;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-danger:hover {
+background-color: #d32f2f;
+transform: translateY(-1px);
+box-shadow: var(--button-shadow-hover);
+}
+
+.btn-icon {
+font-size: 1.1em;
+margin-right: 5px;
+}
+
+/* Main Content Layout */
+main {
+flex-grow: 1;
+display: flex;
+padding: 20px;
+max-width: 1200px;
+margin: 20px auto;
+background-color: var(--card-background);
+border-radius: 12px;
+box-shadow: 0 4px 10px var(--shadow-color);
+overflow: hidden;
+position: relative; /* Needed for absolute positioning of logout button */
+}
+
+.chat-layout {
+display: flex;
+width: 100%;
+min-height: 70vh;
+max-height: 85vh;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+width: 8px;
+height: 8px;
+}
+
+::-webkit-scrollbar-track {
+background: var(--background-color);
+border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+background: var(--light-text-color);
+border-radius: 10px;
+transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+background: #555;
+}
+
+/* Sidebar */
+.chat-sidebar {
+width: 280px;
+border-right: 1px solid var(--border-color);
+padding: 20px;
+display: flex;
+flex-direction: column;
+gap: 15px;
+background-color: #fdfdfd;
+}
+
+.sidebar-header {
+margin-bottom: 15px;
+padding-bottom: 10px;
+border-bottom: 1px solid var(--border-color);
+}
+
+#newChatBtn {
+width: 100%;
+}
+
+#chat-history-list {
+list-style: none;
+overflow-y: auto;
+flex-grow: 1;
+padding-right: 10px;
+/* Removed margin-bottom here, as logout is positioned absolutely */
+}
+
+.chat-history-item {
+padding: 12px 15px;
+margin-bottom: 8px;
+border-radius: 8px;
+cursor: pointer;
+background-color: transparent;
+transition: background-color var(--transition-speed), color var(--transition-speed), transform 0.1s ease;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+font-size: 0.95em;
+color: var(--light-text-color);
+}
+
+.chat-history-item:hover {
+background-color: var(--hover-background);
+color: var(--text-color);
+transform: translateX(3px);
+}
+
+.chat-history-item.active {
+background-color: var(--primary-color);
+color: white;
+font-weight: 600;
+box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+transform: translateX(0);
+}
+
+/* Chat Container */
+.chat-container {
+flex-grow: 1;
+display: flex;
+flex-direction: column;
+padding: 20px;
+position: relative;
+}
+
+.chat-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 20px;
+padding-bottom: 15px;
+border-bottom: 1px solid var(--border-color);
+}
+
+#current-chat-title {
+font-size: 1.5em;
+color: var(--primary-color);
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.chat-header-buttons {
+display: flex;
+gap: 10px;
+}
+
+#chat-output {
+flex-grow: 1;
+overflow-y: auto;
+padding-right: 10px;
+display: flex;
+flex-direction: column;
+gap: 15px;
+padding-bottom: 20px;
+}
+
+/* Empty chat state */
+#chat-output:empty::before {
+content: "Start a conversation! Type your message below.";
+color: var(--light-text-color);
+font-size: 1.2em;
+text-align: center;
+display: block;
+margin-top: 50px;
+opacity: 0.8;
+}
+
+.message {
+display: flex;
+word-wrap: break-word;
+white-space: pre-wrap;
+max-width: 80%;
+padding: 12px 18px;
+border-radius: 20px;
+line-height: 1.5;
+box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+animation: fadeIn 0.3s ease-out;
+}
+
+.message.user {
+align-self: flex-end;
+background-color: var(--primary-color);
+color: white;
+border-bottom-right-radius: 5px;
+}
+
+.message.assistant {
+align-self: flex-start;
+background-color: var(--hover-background);
+color: var(--text-color);
+border-bottom-left-radius: 5px;
+}
+
+/* Loading "Thinking..." dots animation */
+.message.assistant .message-content:contains('Thinking...') {
+display: inline-block;
+position: relative;
+padding-right: 20px;
+}
+
+.message.assistant .message-content:contains('Thinking...')::after {
+content: '...';
+position: absolute;
+right: 0;
+top: 50%;
+transform: translateY(-50%);
+animation: dots 1.5s infinite steps(1, end);
+}
+
+@keyframes dots {
+0%, 20% { content: ''; }
+40% { content: '.'; }
+60% { content: '..'; }
+80%, 100% { content: '...'; }
+}
+
+/* Fade in animation for messages */
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(10px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+/* Chat Input */
+.chat-input-wrapper {
+display: flex;
+align-items: flex-end;
+border: 1px solid var(--border-color);
+border-radius: 25px;
+padding: 8px;
+background-color: var(--card-background);
+box-shadow: 0 2px 5px var(--shadow-color);
+margin-top: auto;
+}
+
+#user-input {
+flex-grow: 1;
+border: none;
+outline: none;
+resize: none;
+padding: 8px 15px;
+font-size: 1em;
+line-height: 1.4;
+max-height: 150px;
+overflow-y: auto;
+background-color: transparent;
+color: var(--text-color);
+transition: border-color var(--transition-speed);
+}
+
+#user-input:focus {
+border-color: var(--primary-color);
+box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+outline: none;
+}
+
+#user-input::placeholder {
+color: var(--light-text-color);
+}
+
+.chat-send-btn {
+background-color: var(--primary-color);
+color: white;
+border: none;
+border-radius: 50%;
+width: 40px;
+height: 40px;
+min-width: 40px;
+min-height: 40px;
+display: flex;
+justify-content: center;
+align-items: center;
+cursor: pointer;
+font-size: 1.3em;
+transition: background-color var(--transition-speed), transform 0.2s ease;
+margin-left: 8px;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.chat-send-btn:hover {
+background-color: var(--primary-dark);
+transform: scale(1.05);
+}
+
+.chat-send-btn:active {
+transform: scale(0.95);
+}
+
+.chat-send-btn .material-icons {
+margin: 0;
+}
+
+/* Modal Styles */
+.auth-modal {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.6);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 2000;
+opacity: 0;
+visibility: hidden;
+transition: opacity var(--transition-speed), visibility var(--transition-speed);
+}
+
+.auth-modal.show {
+opacity: 1;
+visibility: visible;
+}
+
+.modal-content {
+background-color: var(--card-background);
+padding: 30px;
+border-radius: 12px;
+box-shadow: 0 8px 16px var(--shadow-color);
+width: 90%;
+max-width: 450px;
+position: relative;
+transform: translateY(-20px);
+transition: transform var(--transition-speed);
+}
+
+.auth-modal.show .modal-content {
+transform: translateY(0);
+}
+
+.close-btn {
+position: absolute;
+top: 15px;
+right: 15px;
+background: none;
+border: none;
+font-size: 1.8em;
+cursor: pointer;
+color: var(--light-text-color);
+transition: color var(--transition-speed);
+}
+
+.close-btn:hover {
+color: var(--text-color);
+}
+
+.modal-header {
+text-align: center;
+margin-bottom: 25px;
+}
+
+.modal-title {
+font-size: 2em;
+color: var(--primary-color);
+margin-bottom: 5px;
+}
+
+.form-group {
+margin-bottom: 15px;
+}
+
+.form-label {
+display: block;
+margin-bottom: 8px;
+font-weight: 500;
+color: var(--text-color);
+}
+
+.form-input {
+width: 100%;
+padding: 12px 15px;
+border: 1px solid var(--border-color);
+border-radius: 8px;
+font-size: 1em;
+transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.form-input:focus {
+border-color: var(--primary-color);
+box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+outline: none;
+}
+
+.form-footer {
+text-align: center;
+margin-top: 20px;
+color: var(--light-text-color);
+}
+
+.form-footer a {
+color: var(--secondary-color);
+text-decoration: none;
+font-weight: 500;
+}
+
+.form-footer a:hover {
+text-decoration: underline;
+}
+
+/* Utility Classes */
+.hidden {
+display: none !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+.header-container {
+flex-direction: column;
+gap: 15px;
+}
+
+.auth-buttons {
+width: 100%;
+justify-content: center;
+}
+
+/* Adjust user info display for small screens */
+.user-auth-container {
+position: static;
+width: auto;
+justify-content: center;
+}
+.user-info {
+background-color: transparent;
+border-radius: 0;
+padding: 0;
+}
+.username {
+font-size: 0.9em; /* Smaller username on small screens */
+}
+
+.btn {
+padding: 8px 15px;
+font-size: 0.85em;
+}
+
+main {
+padding: 10px;
+margin: 10px auto;
+flex-direction: column;
+max-height: 90vh;
+}
+
+.chat-layout {
+flex-direction: column;
+min-height: auto;
+}
+
+.chat-sidebar {
+width: 100%;
+border-right: none;
+border-bottom: 1px solid var(--border-color);
+padding: 15px;
+max-height: 200px;
+}
+
+#newChatBtn {
+margin-bottom: 10px;
+}
+
+#chat-history-list {
+padding-right: 5px;
+}
+
+.chat-history-item {
+font-size: 0.9em;
+padding: 10px 12px;
+}
+
+/* Reposition logout button for smaller screens */
+#logoutBtn {
+bottom: 10px;
+left: 10px;
+width: calc(100% - 20px); /* Full width minus padding */
+position: fixed; /* Fix its position relative to viewport */
+background-color: var(--card-background);
+box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+z-index: 1000; /* Ensure it's on top */
+}
+
+.chat-container {
+padding: 15px;
+min-height: 50vh;
+}
+
+.chat-header {
+flex-direction: column;
+gap: 10px;
+align-items: flex-start;
+text-align: center;
+}
+
+.chat-header-buttons {
+width: 100%;
+justify-content: center;
+}
+#current-chat-title {
+font-size: 1.3em;
+width: 100%;
+text-align: center;
+}
+
+.message {
+max-width: 95%;
+padding: 10px 15px;
+}
+
+.chat-input-wrapper {
+padding: 5px;
+border-radius: 20px;
+}
+
+#user-input {
+padding: 5px 12px;
+font-size: 0.95em;
+}
+
+.chat-send-btn {
+width: 36px;
+height: 36px;
+font-size: 1.2em;
+}
+
+.modal-content {
+padding: 20px;
+}
+
+.modal-title {
+font-size: 1.7em;
+}
+}
+</style>
+</head>
+<body>
+<header id="mainHeader">
+<div class="header-container">
+<a href="index.html" class="logo">
+<span class="material-icons logo-icon">school</span>
+Future<span>Focus</span>
+</a>
+<div id="authButtons" class="auth-buttons">
+<button class="btn btn-outline" id="loginBtn">
+<span class="material-icons btn-icon">login</span>
+<span class="btn-text">Login</span>
+</button>
+<button class="btn btn-primary" id="signupBtn">
+<span class="material-icons btn-icon">person_add</span>
+<span class="btn-text">Sign Up</span>
+</button>
+</div>
+<div id="userAuthContainer" class="user-auth-container hidden">
+<div class="user-info">
+<div class="user-avatar" id="userAvatar">U</div>
+<span class="username" id="username">Username</span>
+</div>
+<div class="dropdown" id="dropdownMenu">
+<a href="#" class="dropdown-item" id="logoutBtn">
+<span class="material-icons">logout</span> Logout
+</a>
+</div>
+</div>
+</div>
+</header>
+
+<div class="auth-modal" id="loginModal">
+<div class="modal-content">
+<button class="close-btn" id="closeLoginModal">×</button>
+<div class="modal-header">
+<h2 class="modal-title">Login</h2>
+</div>
+<form id="loginForm">
+<div class="form-group">
+<label for="email" class="form-label">Email</label>
+<input type="email" id="email" class="form-input" placeholder="Enter your email" required>
+</div>
+<div class="form-group">
+<label for="password" class="form-label">Password</label>
+<input type="password" id="password" class="form-input" placeholder="Enter your password" required>
+</div>
+<button type="submit" class="btn btn-primary" style="width: 100%;">
+<span class="material-icons">login</span> Login
+</button>
+<div class="form-footer">
+Don't have an account? <a href="#" id="showSignupModal">Sign up</a>
+</div>
+</form>
+</div>
+</div>
+
+<div class="auth-modal" id="signupModal">
+<div class="modal-content">
+<button class="close-btn" id="closeSignupModal">×</button>
+<div class="modal-header">
+<h2 class="modal-title">Sign Up</h2>
+</div>
+<form id="signupForm">
+<div class="form-group">
+<label for="signupName" class="form-label">Full Name</label>
+<input type="text" id="signupName" class="form-input" placeholder="Enter your full name" required>
+</div>
+<div class="form-group">
+<label for="signupEmail" class="form-label">Email</label>
+<input type="email" id="signupEmail" class="form-input" placeholder="Enter your email" required>
+</div>
+<div class="form-group">
+<label for="signupPassword" class="form-label">Password</label>
+<input type="password" id="signupPassword" class="form-input" placeholder="Create a password" required>
+</div>
+<div class="form-group">
+<label for="confirmPassword" class="form-label">Confirm Password</label>
+<input type="password" id="confirmPassword" class="form-input" placeholder="Confirm your password" required>
+</div>
+<button type="submit" class="btn btn-primary" style="width: 100%;">
+<span class="material-icons">person_add</span> Sign Up
+</button>
+<div class="form-footer">
+Already have an account? <a href="#" id="showLoginModal">Login</a>
+</div>
+</form>
+</div>
+</div>
+
+<main>
+<div class="chat-layout">
+<aside class="chat-sidebar">
+<div class="sidebar-header">
+<button id="newChatBtn" class="btn btn-primary">New Chat</button>
+</div>
+<ul id="chat-history-list"></ul>
+</aside>
+<div class="chat-container">
+<div class="chat-header">
+<h3 id="current-chat-title">New Chat</h3>
+<div class="chat-header-buttons">
+<button id="renameChatBtn" class="btn btn-outline">Rename</button>
+<button id="deleteChatBtn" class="btn btn-danger">Delete</button>
+</div>
+</div>
+<div id="chat-output"></div>
+<div class="chat-input-wrapper">
+<textarea id="user-input" placeholder="Ask me anything..." rows="1"></textarea>
+<button id="sendMessageBtn" class="chat-send-btn">
+<span class="material-icons">send</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+
+<script>
+// ===== GLOBAL VARIABLES =====
+const users = JSON.parse(localStorage.getItem('futureFocusUsers')) || [];
+let currentUser = null;
+let chats = JSON.parse(localStorage.getItem('futureFocusChats')) || [];
+let currentChatId = null;
+
+// ===== DOM ELEMENTS =====
+// Authentication elements
+const authButtons = document.getElementById('authButtons');
+const userAuthContainer = document.getElementById('userAuthContainer');
+const userAvatar = document.getElementById('userAvatar');
+const username = document.getElementById('username');
+const dropdownMenu = document.getElementById('dropdownMenu');
+const logoutBtn = document.getElementById('logoutBtn');
+const loginModal = document.getElementById('loginModal');
+const signupModal = document.getElementById('signupModal');
+const closeLoginModal = document.getElementById('closeLoginModal');
+const closeSignupModal = document.getElementById('closeSignupModal');
+const loginBtn = document.getElementById('loginBtn');
+const signupBtn = document.getElementById('signupBtn');
+const showLoginModal = document.getElementById('showLoginModal');
+const showSignupModal = document.getElementById('showSignupModal');
+const loginForm = document.getElementById('loginForm');
+const signupForm = document.getElementById('signupForm');
+
+// Chat elements
+const chatHistoryList = document.getElementById('chat-history-list');
+const chatOutput = document.getElementById('chat-output');
+const currentChatTitle = document.getElementById('current-chat-title');
+const userInput = document.getElementById('user-input');
+const newChatBtn = document.getElementById('newChatBtn');
+const renameChatBtn = document.getElementById('renameChatBtn');
+const deleteChatBtn = document.getElementById('deleteChatBtn');
+const sendMessageBtn = document.getElementById('sendMessageBtn');
+
+// ===== CHAT FUNCTIONS =====
+function updateChatUI() {
+// Update chat history sidebar
+if (chatHistoryList) {
+chatHistoryList.innerHTML = chats.map(chat => `
+<li class="chat-history-item ${chat.id === currentChatId ? 'active' : ''}" 
+data-chat-id="${chat.id}">
+${chat.title}
+</li>
+`).join('');
+}
+
+// Update current chat display
+if (currentChatTitle) {
+const currentChat = chats.find(c => c.id === currentChatId);
+currentChatTitle.textContent = currentChat ? currentChat.title : 'New Chat';
+}
+
+if (chatOutput) {
+const chat = chats.find(c => c.id === currentChatId);
+chatOutput.innerHTML = chat ? chat.messages.map(msg => `
+<div class="message ${msg.sender}">
+<div class="message-content">${msg.content}</div>
+</div>
+`).join('') : '';
+chatOutput.scrollTop = chatOutput.scrollHeight;
+}
+}
+
+function loadChat(chatId) {
+currentChatId = chatId;
+localStorage.setItem('futureFocusCurrentUserChatId', currentChatId);
+updateChatUI();
+}
+
+function createNewChat() {
+const newChat = {
+id: Date.now().toString(),
+title: 'New Chat',
+messages: []
+};
+chats.push(newChat);
+currentChatId = newChat.id;
+localStorage.setItem('futureFocusChats', JSON.stringify(chats));
+localStorage.setItem('futureFocusCurrentUserChatId', currentChatId);
+updateChatUI();
+}
+
+function renameChat() {
+if (!currentChatId) {
+alert('No chat selected to rename.');
+return;
+}
+const chat = chats.find(c => c.id === currentChatId);
+if (!chat) return;
+
+const newTitle = prompt('Enter new chat title:', chat.title);
+if (newTitle !== null && newTitle.trim() !== '') {
+chat.title = newTitle.trim();
+localStorage.setItem('futureFocusChats', JSON.stringify(chats));
+updateChatUI();
+}
+}
+
+function deleteChat() {
+if (!currentChatId) {
+alert('No chat selected to delete.');
+return;
+}
+if (confirm('Are you sure you want to delete this chat? This cannot be undone.')) {
+chats = chats.filter(c => c.id !== currentChatId);
+localStorage.setItem('futureFocusChats', JSON.stringify(chats));
+if (chats.length > 0) {
+currentChatId = chats[chats.length - 1].id;
+} else {
+currentChatId = null;
+createNewChat();
+}
+localStorage.setItem('futureFocusCurrentUserChatId', currentChatId);
+updateChatUI();
+}
+}
+
+function autoResizeTextarea() {
+if (userInput) {
+userInput.style.height = 'auto';
+userInput.style.height = (userInput.scrollHeight) + 'px';
+}
+}
+
+async function sendMessage() {
+if (!userInput) return;
+if (!currentChatId) createNewChat();
+
+const message = userInput.value.trim();
+if (!message) return;
+
+const chat = chats.find(c => c.id === currentChatId);
+if (!chat) return;
+
+// Add user message
+chat.messages.push({
+sender: 'user',
+content: message,
+timestamp: new Date().toISOString()
+});
+updateChatUI();
+userInput.value = '';
+autoResizeTextarea();
+
+// Add loading message
+const loadingMessage = {
+sender: 'assistant',
+content: 'Thinking...',
+timestamp: new Date().toISOString()
+};
+chat.messages.push(loadingMessage);
+updateChatUI();
+
+try {
+// Get AI response from Google Gemini API
+const aiResponse = await getGeminiResponse(message); // Call the Gemini API function
+// Replace loading message with response
+chat.messages.pop();
+chat.messages.push({
+sender: 'assistant',
+content: aiResponse,
+timestamp: new Date().toISOString()
+});
+localStorage.setItem('futureFocusChats', JSON.stringify(chats));
+updateChatUI();
+} catch (error) {
+console.error('Gemini AI Error:', error.message); // Log the error message
+// Replace loading message with error
+chat.messages.pop();
+chat.messages.push({
+sender: 'assistant',
+content: `Sorry, I encountered an error communicating with the AI: ${error.message}. Please try again.`,
+timestamp: new Date().toISOString()
+});
+updateChatUI();
+}
+}
+
+async function getGeminiResponse(userMessage) {
+const GEMINI_API_KEY = 'AIzaSyB7jI3Os3B1OaQAX1mgm2_cLY92vyfpAD8'; // Your Google Gemini API Key - UPDATED
+// Trying 'gemini-1.5-flash' based on your hunch and common availability.
+const GEMINI_API_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+// If 'gemini-1.5-flash' still fails, try 'gemini-1.5-pro' or 'gemini-1.0-pro'
+// The BEST way to confirm available models for your key is to check Google AI Studio (aistudio.google.com)
+// or the Google Cloud Console for the Generative Language API.
+
+try {
+const response = await fetch(GEMINI_API_ENDPOINT, {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json'
+},
+body: JSON.stringify({
+contents: [{
+parts: [{
+text: userMessage
+}]
+}],
+// Optional: Add generation settings
+// generationConfig: {
+// temperature: 0.9,
+// topK: 1,
+// topP: 1,
+// maxOutputTokens: 2048,
+// },
+})
+});
+
+if (!response.ok) {
+const errorData = await response.json();
+// Extract error message from Google's standard error response structure
+const errorMessage = errorData.error?.message || JSON.stringify(errorData);
+throw new Error(`Gemini API error: ${response.status} ${response.statusText} - ${errorMessage}`);
+}
+
+const data = await response.json();
+// Check for safety feedback even if the response is OK
+if (data.promptFeedback && data.promptFeedback.blockReason) {
+return `Response blocked due to safety concerns: ${data.promptFeedback.blockReason}. Please try a different query.`;
+}
+
+if (data.candidates && data.candidates.length > 0 && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts.length > 0) {
+return data.candidates[0].content.parts[0].text;
+} else {
+throw new Error('Gemini API response did not contain expected message content or was empty/unparseable.');
+}
+
+} catch (error) {
+console.error('Error fetching from Gemini API:', error.message);
+throw error; // Re-throw to be caught by sendMessage's try/catch
+}
+}
+
+// ===== AUTHENTICATION FUNCTIONS =====
+function toggleDropdown(e) {
+e.stopPropagation();
+dropdownMenu.classList.toggle('show');
+}
+
+function handleLogin(e) {
+e.preventDefault();
+const email = document.getElementById('email').value.trim();
+const password = document.getElementById('password').value;
+if (!email || !password) {
+alert('Please enter both email and password.');
+return;
+}
+const user = users.find(u => u.email === email && u.password === password);
+if (user) {
+currentUser = user;
+localStorage.setItem('futureFocusCurrentUser', JSON.stringify(user));
+updateUserUI();
+loginModal.classList.remove('show');
+alert(`Welcome back, ${user.name}!`);
+// Initialize chat for user
+const lastChatId = localStorage.getItem('futureFocusCurrentUserChatId');
+if (lastChatId && chats.some(c => c.id === lastChatId)) {
+loadChat(lastChatId);
+} else {
+createNewChat();
+}
+} else {
+alert('Invalid email or password. Please try again.');
+}
+}
+
+function handleSignup(e) {
+e.preventDefault();
+const name = document.getElementById('signupName').value.trim();
+const email = document.getElementById('signupEmail').value.trim();
+const password = document.getElementById('signupPassword').value;
+const confirmPassword = document.getElementById('confirmPassword').value;
+if (!name || !email || !password || !confirmPassword) {
+alert('Please fill in all fields.');
+return;
+}
+if (password !== confirmPassword) {
+alert('Passwords do not match.');
+return;
+}
+if (password.length < 6) {
+alert('Password must be at least 6 characters long.');
+return;
+}
+if (users.some(u => u.email === email)) {
+alert('An account with this email already exists.');
+return;
+}
+const newUser = {
+id: Date.now().toString(),
+name,
+email,
+password,
+avatar: name.charAt(0).toUpperCase()
+};
+users.push(newUser);
+localStorage.setItem('futureFocusUsers', JSON.stringify(users));
+currentUser = newUser;
+localStorage.setItem('futureFocusCurrentUser', JSON.stringify(newUser));
+updateUserUI();
+signupModal.classList.remove('show');
+alert(`Welcome to Future Focus, ${name}!`);
+createNewChat();
+}
+
+function handleLogout(e) {
+e.preventDefault();
+currentUser = null;
+localStorage.removeItem('futureFocusCurrentUser');
+localStorage.removeItem('futureFocusCurrentUserChatId');
+updateUserUI();
+chats = [];
+currentChatId = null;
+createNewChat();
+alert('You have been logged out successfully.');
+}
+
+function updateUserUI() {
+if (currentUser) {
+authButtons.classList.add('hidden');
+userAuthContainer.classList.remove('hidden');
+userAvatar.textContent = currentUser.avatar;
+username.textContent = currentUser.name;
+} else {
+authButtons.classList.remove('hidden');
+userAuthContainer.classList.add('hidden');
+}
+}
+
+// ===== EVENT LISTENERS =====
+function setupEventListeners() {
+// Auth events
+loginBtn.addEventListener('click', () => loginModal.classList.add('show'));
+signupBtn.addEventListener('click', () => signupModal.classList.add('show'));
+closeLoginModal.addEventListener('click', () => loginModal.classList.remove('show'));
+closeSignupModal.addEventListener('click', () => signupModal.classList.remove('show'));
+showSignupModal.addEventListener('click', (e) => {
+e.preventDefault();
+loginModal.classList.remove('show');
+signupModal.classList.add('show');
+});
+showLoginModal.addEventListener('click', (e) => {
+e.preventDefault();
+signupModal.classList.remove('show');
+loginModal.classList.add('show');
+});
+userAuthContainer.addEventListener('click', function(e) {
+if (e.target.closest('.user-info') || e.target === dropdownMenu) {
+toggleDropdown(e);
+}
+});
+logoutBtn.addEventListener('click', handleLogout);
+loginForm.addEventListener('submit', handleLogin);
+signupForm.addEventListener('submit', handleSignup);
+document.addEventListener('click', (e) => {
+if (!userAuthContainer.contains(e.target)) {
+dropdownMenu.classList.remove('show');
+}
+});
+
+// Chat events
+userInput.addEventListener('input', autoResizeTextarea);
+userInput.addEventListener('keydown', (e) => {
+if (e.key === 'Enter' && !e.shiftKey) {
+e.preventDefault();
+sendMessage();
+}
+});
+sendMessageBtn.addEventListener('click', sendMessage);
+newChatBtn.addEventListener('click', createNewChat);
+renameChatBtn.addEventListener('click', renameChat);
+deleteChatBtn.addEventListener('click', deleteChat);
+chatHistoryList.addEventListener('click', (e) => {
+const chatItem = e.target.closest('.chat-history-item');
+if (chatItem) {
+loadChat(chatItem.dataset.chatId);
+}
+});
+}
+
+// ===== INITIALIZATION =====
+document.addEventListener('DOMContentLoaded', function() {
+// Initialize auth
+const loggedInUser = JSON.parse(localStorage.getItem('futureFocusCurrentUser'));
+if (loggedInUser) {
+currentUser = loggedInUser;
+updateUserUI();
+// Initialize chat
+const lastChatId = localStorage.getItem('futureFocusCurrentUserChatId');
+if (lastChatId && chats.some(c => c.id === lastChatId)) {
+loadChat(lastChatId);
+} else if (chats.length > 0) {
+loadChat(chats[0].id);
+} else {
+createNewChat();
+}
+} else {
+// Not logged in - clear chats and show empty state
+chats = [];
+currentChatId = null;
+createNewChat();
+}
+// Setup all event listeners
+setupEventListeners();
+});
+</script>
+</body>
+</html>
